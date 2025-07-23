@@ -1,56 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Debug Joint | Squash Your Hunger Bugs</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Rajdhani:wght@500;700&family=Pacifico&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Space Mono', monospace;
-            background-color: #0f172a;
-            color: #f8fafc;
-            overflow-x: hidden;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Debug Joint | Squash Your Hunger Bugs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Rajdhani:wght@500;700&family=Pacifico&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    body {
+      font-family: 'Space Mono', monospace;
+      background-color: #0f172a;
+      color: #f8fafc;
+      overflow-x: hidden;
+    }
+    .logo-font { font-family: 'Pacifico', cursive; }
+    .tech-heading { font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 1px; }
         
-        .logo-font {
-            font-family: 'Pacifico', cursive;
-        }
-        
-        .tech-heading {
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-        
+    
+        /* Glitch effect */
         .glitch {
-            position: relative;
+        position: relative;
+        display: inline-block;
         }
-        
-        .glitch::before, .glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .glitch::before {
-            left: 2px;
-            text-shadow: -2px 0 #ff00ff;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim 5s infinite linear alternate-reverse;
-        }
-        
+
+        .glitch::before,
         .glitch::after {
-            left: -2px;
-            text-shadow: -2px 0 #00ffff;
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        content: attr(data-text);
+        position: absolute;
+        left: 0;
+        width: 100%;
+        overflow: hidden;
+        color: inherit;
+        z-index: -1;
         }
+
+        .glitch::before {
+        text-shadow: 2px 0 red;
+        animation: glitchTop 1s infinite linear alternate-reverse;
+        top: -2px;
+        }
+
+        .glitch::after {
+        text-shadow: -2px 0 blue;
+        animation: glitchBottom 1s infinite linear alternate-reverse;
+        top: 2px;
+        }
+
+        @keyframes glitchTop {
+        0% {
+            clip: rect(0, 9999px, 0, 0);
+        }
+        100% {
+            clip: rect(0, 9999px, 0, 0);
+        }
+        }
+
+        @keyframes glitchBottom {
+        0% {
+            clip: rect(0, 9999px, 0, 0);
+        }
+        100% {
+            clip: rect(0, 9999px, 0, 0);
+        }
+        }
+
+        /* ✅ Disable glitch effect only on small screens */
+        @media (max-width: 768px) {
+        .glitch::before,
+        .glitch::after {
+            display: none;
+        }
+        }
+
         
         @keyframes glitch-anim {
             0% { clip: rect(31px, 9999px, 94px, 0); }
@@ -182,26 +204,33 @@
     </style>
 </head>
 <body class="min-h-screen">
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-black bg-opacity-80 backdrop-blur-sm">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="logo-font text-2xl md:text-3xl text-green-400">
-                <span class="glitch" data-text="Debug Joint">Debug Joint</span>
-            </div>
-            <div class="hidden md:flex space-x-8">
-                <a href="#home" class="text-green-400 hover:text-white transition">Home</a>
-                <a href="#about" class="text-green-400 hover:text-white transition">About</a>
-                <a href="#menu" class="text-green-400 hover:text-white transition">Menu</a>
-                <a href="#location" class="text-green-400 hover:text-white transition">Location</a>
-            </div>
-            <button class="md:hidden text-green-400">
-                <i class="fas fa-bars text-2xl"></i>
-            </button>
-        </div>
-    </nav>
+  <nav class="fixed w-full z-50 bg-black bg-opacity-80 backdrop-blur-sm">
+    <div class="w-full max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="logo-font text-2xl md:text-3xl text-green-400">
+        <span class="glitch" data-text="Debug Joint">Debug Joint</span>
+      </div>
+      <div class="md:hidden">
+        <button id="mobile-menu-button" class="text-green-400 focus:outline-none">
+          <i class="fas fa-bars text-2xl"></i>
+        </button>
+      </div>
+      <div id="mobile-menu" class="hidden md:hidden absolute top-16 right-4 bg-black border border-green-500 rounded-lg shadow-lg w-48 py-2 z-50">
+        <a href="#home" class="block px-4 py-2 text-green-400 hover:text-white">Home</a>
+        <a href="#about" class="block px-4 py-2 text-green-400 hover:text-white">About</a>
+        <a href="#menu" class="block px-4 py-2 text-green-400 hover:text-white">Menu</a>
+        <a href="#location" class="block px-4 py-2 text-green-400 hover:text-white">Location</a>
+      </div>
+      <div class="hidden md:flex space-x-8">
+        <a href="#home" class="text-green-400 hover:text-white transition">Home</a>
+        <a href="#about" class="text-green-400 hover:text-white transition">About</a>
+        <a href="#menu" class="text-green-400 hover:text-white transition">Menu</a>
+        <a href="#location" class="text-green-400 hover:text-white transition">Location</a>
+      </div>
+    </div>
+  </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="min-h-screen flex items-center justify-center relative overflow-hidden">
+    <section id="home" class="pt-20" class="min-h-screen flex items-center justify-center relative overflow-hidden">
         <div class="absolute inset-0 bg-black opacity-50"></div>
         <div class="absolute inset-0 flex items-center justify-center">
             <div class="w-full h-full bg-gradient-to-r from-purple-900 via-pink-900 to-blue-900 opacity-30 animate-pulse"></div>
@@ -210,6 +239,7 @@
             <h1 class="text-4xl md:text-6xl font-bold mb-6 text-green-400 tech-heading">
                 <span class="glitch" data-text="Squash your hunger bugs.">Squash your hunger bugs.</span>
             </h1>
+
             <h2 class="text-2xl md:text-4xl mb-8 text-white">
                 <span class="typewriter">Debug it with chai.</span>
             </h2>
@@ -495,32 +525,27 @@
     </footer>
 
     <script>
-        // Simple typewriter effect for the terminal
-        document.addEventListener('DOMContentLoaded', function() {
-            const cursor = document.querySelector('.cursor');
-            
-            // Blink cursor continuously
-            setInterval(() => {
-                cursor.style.opacity = cursor.style.opacity === '0' ? '1' : '0';
-            }, 500);
-            
-            // Smooth scrolling for navigation
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                });
-            });
-            
-            // Mobile menu toggle (would need more implementation)
-            const mobileMenuButton = document.querySelector('button.md\\:hidden');
-            mobileMenuButton.addEventListener('click', function() {
-                alert("Mobile menu would open here in a full implementation!");
-            });
+    document.addEventListener('DOMContentLoaded', function () {
+      const cursor = document.querySelector('.cursor');
+      if (cursor) {
+        setInterval(() => {
+          cursor.style.opacity = cursor.style.opacity === '0' ? '1' : '0';
+        }, 500);
+      }
+
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
         });
+      });
+
+      const menuBtn = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+      menuBtn.addEventListener('click', function () {
+        mobileMenu.classList.toggle('hidden');
+      });
+    });
     </script>
 </body>
 </html>
