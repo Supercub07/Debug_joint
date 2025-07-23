@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Joint | Squash Your Hunger Bugs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Rajdhani:wght@500;700&family=Pacifico&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Space Mono', monospace;
+            background-color: #0f172a;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        
+        .logo-font {
+            font-family: 'Pacifico', cursive;
+        }
+        
+        .tech-heading {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .glitch {
+            position: relative;
+        }
+        
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 #ff00ff;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 #00ffff;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+        
+        @keyframes glitch-anim {
+            0% { clip: rect(31px, 9999px, 94px, 0); }
+            10% { clip: rect(112px, 9999px, 76px, 0); }
+            20% { clip: rect(85px, 9999px, 77px, 0); }
+            30% { clip: rect(27px, 9999px, 97px, 0); }
+            40% { clip: rect(64px, 9999px, 98px, 0); }
+            50% { clip: rect(61px, 9999px, 85px, 0); }
+            60% { clip: rect(99px, 9999px, 114px, 0); }
+            70% { clip: rect(34px, 9999px, 115px, 0); }
+            80% { clip: rect(98px, 9999px, 129px, 0); }
+            90% { clip: rect(43px, 9999px, 96px, 0); }
+            100% { clip: rect(82px, 9999px, 64px, 0); }
+        }
+        
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 119px, 0); }
+            10% { clip: rect(79px, 9999px, 85px, 0); }
+            20% { clip: rect(75px, 9999px, 99px, 0); }
+            30% { clip: rect(37px, 9999px, 117px, 0); }
+            40% { clip: rect(86px, 9999px, 82px, 0); }
+            50% { clip: rect(42px, 9999px, 78px, 0); }
+            60% { clip: rect(109px, 9999px, 87px, 0); }
+            70% { clip: rect(24px, 9999px, 126px, 0); }
+            80% { clip: rect(53px, 9999px, 149px, 0); }
+            90% { clip: rect(58px, 9999px, 53px, 0); }
+            100% { clip: rect(98px, 9999px, 70px, 0); }
+        }
+        
+        .terminal {
+            position: relative;
+            border-radius: 6px;
+            background-color: #1e293b;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+        
+        .terminal-header {
+            height: 24px;
+            background-color: #334155;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+        }
+        
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        
+        .terminal-content {
+            padding: 20px;
+            font-family: 'Source Code Pro', monospace;
+            line-height: 1.5;
+        }
+        
+        .command {
+            color: #10b981;
+        }
+        
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background-color: #f8fafc;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        .menu-item {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-5px);
+            border-color: #10b981;
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+        }
+        
+        .typewriter {
+            overflow: hidden;
+            border-right: 3px solid #10b981;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: 2px;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #10b981 }
+        }
+        
+        .pixel-border {
+            position: relative;
+        }
+        
+        .pixel-border::before {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(45deg, #ff00ff, #00ffff, #ff00ff, #00ffff);
+            background-size: 400% 400%;
+            z-index: -1;
+            animation: gradient 8s ease infinite;
+            border-radius: 8px;
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-black bg-opacity-80 backdrop-blur-sm">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="logo-font text-2xl md:text-3xl text-green-400">
+                <span class="glitch" data-text="Debug Joint">Debug Joint</span>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="text-green-400 hover:text-white transition">Home</a>
+                <a href="#about" class="text-green-400 hover:text-white transition">About</a>
+                <a href="#menu" class="text-green-400 hover:text-white transition">Menu</a>
+                <a href="#location" class="text-green-400 hover:text-white transition">Location</a>
+            </div>
+            <button class="md:hidden text-green-400">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-50"></div>
+        <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-full h-full bg-gradient-to-r from-purple-900 via-pink-900 to-blue-900 opacity-30 animate-pulse"></div>
+        </div>
+        <div class="container mx-auto px-4 z-10 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 text-green-400 tech-heading">
+                <span class="glitch" data-text="Squash your hunger bugs.">Squash your hunger bugs.</span>
+            </h1>
+            <h2 class="text-2xl md:text-4xl mb-8 text-white">
+                <span class="typewriter">Debug it with chai.</span>
+            </h2>
+            <div class="terminal max-w-3xl mx-auto">
+                <div class="terminal-header">
+                    <div class="terminal-dot bg-red-500"></div>
+                    <div class="terminal-dot bg-yellow-500"></div>
+                    <div class="terminal-dot bg-green-500"></div>
+                </div>
+                <div class="terminal-content">
+                    <p class="text-green-400">$ <span class="command">npm install debug-joint</span></p>
+                    <p class="text-gray-400">Installing the ultimate hunger solution...</p>
+                    <p class="text-green-400">$ <span class="command">debug-joint --serve --hot</span></p>
+                    <p class="text-gray-400">Serving piping hot chai and crispy snacks...</p>
+                    <p class="text-green-400">$ <span class="command">status: <span class="text-white">hunger</span> --fixed</span></p>
+                    <p class="text-gray-400">All hunger bugs successfully debugged!<span class="cursor"></span></p>
+                </div>
+            </div>
+            <a href="#menu" class="mt-10 inline-block px-8 py-3 bg-green-500 text-black font-bold rounded-full hover:bg-green-400 transition transform hover:scale-105">
+                View Menu
+            </a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gradient-to-b from-gray-900 to-gray-800">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center text-green-400 tech-heading">
+                <span class="glitch" data-text="About Debug Joint">About Debug Joint</span>
+            </h2>
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/2 pixel-border">
+                    <div class="bg-gray-800 p-8 rounded-lg">
+                        <h3 class="text-2xl font-bold mb-4 text-green-400">Our Story</h3>
+                        <p class="mb-4">Born from late-night coding sessions and endless cups of chai, Debug Joint is where tech meets taste. We're the fuel station for programmers, students, and night owls who need that perfect combo of caffeine and crunch.</p>
+                        <p>Our mission? To squash hunger bugs with delicious, affordable snacks that speak your language - tech!</p>
+                    </div>
+                </div>
+                <div class="md:w-1/2 pixel-border">
+                    <div class="bg-gray-800 p-8 rounded-lg">
+                        <h3 class="text-2xl font-bold mb-4 text-green-400">Why Choose Us?</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="text-green-400 mr-2">✓</span>
+                                <span>Tech-inspired menu with quirky names</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-400 mr-2">✓</span>
+                                <span>Open late for night owls and coders</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-400 mr-2">✓</span>
+                                <span>Fast service - we respect your time</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-400 mr-2">✓</span>
+                                <span>Free WiFi and charging ports</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-400 mr-2">✓</span>
+                                <span>Student discounts available</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Founders Section -->
+    <section class="py-20 bg-gray-800">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center text-green-400 tech-heading">
+                <span class="glitch" data-text="Our Founders">Our Founders</span>
+            </h2>
+            <div class="flex flex-col md:flex-row justify-center gap-12">
+                <!-- Founder 1 -->
+                <div class="text-center">
+                    <div class="w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden border-4 border-green-400">
+                        <img src="asserts/Scr.png" alt="Vignesh" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-2xl font-bold text-green-400">Vignesh</h3>
+                    <p class="text-gray-400">Chief Chai Officer</p>
+                    <p class="mt-2">The mad scientist behind our signature chai blends</p>
+                </div>
+                <!-- Founder 2 -->
+                <div class="text-center">
+                    <div class="w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden border-4 border-green-400">
+                        <img src="asserts/Bar.png" alt="Barath" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-2xl font-bold text-green-400">Barath</h3>
+                    <p class="text-gray-400">Snack Architect</p>
+                    <p class="mt-2">Crafts the perfect byte-sized snacks for coders</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="py-20 bg-gray-800">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center text-green-400">
+                <span class="glitch" data-text="Our Byte-sized Menu">Our Byte-sized Menu</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Chai Section -->
+                <div class="bg-gray-900 rounded-xl overflow-hidden menu-item">
+                    <div class="bg-green-900 text-center py-3">
+                        <h3 class="text-xl font-bold text-white">Chai Compilers</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6">
+                            <h4 class="text-lg font-semibold text-green-400 mb-2">Regular Chai</h4>
+                            <p class="text-gray-400">The classic debugger</p>
+                            <p class="text-green-400 mt-1">₹20</p>
+                        </div>
+                        <div class="mb-6">
+                            <h4 class="text-lg font-semibold text-green-400 mb-2">Adrak Chai</h4>
+                            <p class="text-gray-400">For when you need extra processing power</p>
+                            <p class="text-green-400 mt-1">₹25</p>
+                        </div>
+                        <div class="mb-6">
+                            <h4 class="text-lg font-semibold text-green-400 mb-2">Masala Chai</h4>
+                            <p class="text-gray-400">Spicy like your last error message</p>
+                            <p class="text-green-400 mt-1">₹25</p>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-green-400 mb-2">Elixir Chai</h4>
+                            <p class="text-gray-400">Our secret recipe - guaranteed to fix bugs</p>
+                            <p class="text-green-400 mt-1">₹30</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Snacks Section -->
+                <div class="bg-gray-900 rounded-xl overflow-hidden menu-item">
+                    <div class="bg-blue-900 text-center py-3">
+                        <h3 class="text-xl font-bold text-white">Snack Plugins</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6">
+                            <h4 class="text-lg font-semibold text-green-400 mb-2">404 Nuggets</h4>
+                            <p class="text-gray-400">Crispy chicken bites - not found in your diet</p>
+                            <p class="text-green-400 mt-1">₹80</p>
+                        </div>
+                        <div class="mb-6">
+                            <h4 class="text-lg font-semibold text-green-400 mb-2">Binary Bytes</h4>
+                            <p class="text-gray-400">Double patty burger (1 0 1 0 goodness)</p>
+                            <p class="text-green-400 mt-1">₹60</p>
+                        </div>
+                        <div class="mb-6">
+                            <h4 class="text-lg font-semibold text-green-400 mb-2">Stack Samosa</h4>
+                            <p class="text-gray-400">Layered like your call stack</p>
+                            <p class="text-green-400 mt-1">₹30</p>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-green-400 mb-2">Cache Cookies</h4>
+                            <p class="text-gray-400">Freshly baked, always in memory</p>
+                            <p class="text-green-400 mt-1">₹20</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Combos Section -->
+                <div class="bg-gray-900 rounded-xl overflow-hidden menu-item">
+                    <div class="bg-purple-900 text-center py-3">
+                        <h3 class="text-xl font-bold text-white">Debug Combos</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6">
+                            <h4 class="text-lg font-semibold text-green-400 mb-2">The Full Stack</h4>
+                            <p class="text-gray-400">Chai + 404 Nuggets + Stack Samosa</p>
+                            <p class="text-green-400 mt-1">₹120</p>
+                        </div>
+                        <div class="mb-6">
+                            <h4 class="text-lg font-semibold text-green-400 mb-2">The Bug Fixer</h4>
+                            <p class="text-gray-400">Elixir Chai + Binary Bytes + Cache Cookies</p>
+                            <p class="text-green-400 mt-1">₹100</p>
+                        </div>
+                        <div class="mb-6">
+                            <h4 class="text-lg font-semibold text-green-400 mb-2">The Night Owl</h4>
+                            <p class="text-gray-400">Adrak Chai x2 + 404 Nuggets</p>
+                            <p class="text-green-400 mt-1">₹130</p>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-green-400 mb-2">The Student Special</h4>
+                            <p class="text-gray-400">Regular Chai + Stack Samosa (ID required)</p>
+                            <p class="text-green-400 mt-1">₹40</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location Section -->
+    <section id="location" class="py-20 bg-gradient-to-b from-gray-800 to-gray-900">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center text-green-400">
+                <span class="glitch" data-text="Find Our Terminal">Find Our Terminal</span>
+            </h2>
+            
+            <div class="flex flex-col lg:flex-row gap-12 items-center">
+                <div class="lg:w-1/2">
+                    <div class="terminal">
+                        <div class="terminal-header">
+                            <div class="terminal-dot bg-red-500"></div>
+                            <div class="terminal-dot bg-yellow-500"></div>
+                            <div class="terminal-dot bg-green-500"></div>
+                        </div>
+                        <div class="terminal-content">
+                            <p class="text-green-400">$ <span class="command">debug-joint --location</span></p>
+                            <p class="text-white">> Debug Joint HQ</p>
+                            <p class="text-gray-400">Gemini parsn apartment</p>
+                            <p class="text-gray-400">Cathedral Garden road</p>
+                            <p class="text-gray-400 mb-4">Chennai - 600006</p>
+                            
+                            <p class="text-green-400">$ <span class="command">debug-joint --hours</span></p>
+                            <p class="text-white">> Operational Hours:</p>
+                            <p class="text-gray-400">Monday-Friday: 4PM - 2AM</p>
+                            <p class="text-gray-400">Saturday-Sunday: 12PM - 3AM</p>
+                            <p class="text-gray-400 mb-4">(Extended hours during exams!)</p>
+                            
+                            <p class="text-green-400">$ <span class="command">debug-joint --contact</span></p>
+                            <p class="text-white">> Contact Terminal:</p>
+                            <p class="text-gray-400">Phone: +91 9176460143</p>
+                            <p class="text-gray-400">Email: help@debugjoint.com</p>
+                            <p class="text-gray-400">Instagram: @debugjoint</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:w-1/2 h-96">
+                    <div class="w-full h-full bg-gray-700 rounded-lg overflow-hidden relative">
+                        <div class="absolute inset-0 flex items-center justify-center text-gray-500">
+                            <i class="fas fa-map-marker-alt text-5xl"></i>
+                            <p class="ml-4">Map loading...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black py-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-8 md:mb-0">
+                    <div class="logo-font text-3xl text-green-400 mb-4">
+                        Debug Joint
+                    </div>
+                    <p class="text-gray-400">Squashing hunger bugs since 2025</p>
+                </div>
+                
+                <div class="flex space-x-6 mb-8 md:mb-0">
+                    <a href="#" class="text-gray-400 hover:text-green-400 text-2xl transition">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-green-400 text-2xl transition">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-green-400 text-2xl transition">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-green-400 text-2xl transition">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+                
+                <div class="text-center md:text-right">
+                    <p class="text-gray-400 mb-2">For bulk orders & collaborations:</p>
+                    <a href="mailto:orders@debugjoint.com" class="text-green-400 hover:underline">orders@debugjoint.com</a>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500">
+                <p>© 2025 Debug Joint. All bugs fixed. All rights reserved.</p>
+                <p class="mt-2">Made with <i class="fas fa-heart text-red-500"></i> and <i class="fas fa-coffee text-yellow-500"></i> for coders</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple typewriter effect for the terminal
+        document.addEventListener('DOMContentLoaded', function() {
+            const cursor = document.querySelector('.cursor');
+            
+            // Blink cursor continuously
+            setInterval(() => {
+                cursor.style.opacity = cursor.style.opacity === '0' ? '1' : '0';
+            }, 500);
+            
+            // Smooth scrolling for navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+            
+            // Mobile menu toggle (would need more implementation)
+            const mobileMenuButton = document.querySelector('button.md\\:hidden');
+            mobileMenuButton.addEventListener('click', function() {
+                alert("Mobile menu would open here in a full implementation!");
+            });
+        });
+    </script>
+</body>
+</html>
